@@ -3,7 +3,7 @@ import sys
 
 def subvals(x, ivs):
     x_ = list(x)
-    for i, v in ivs:
+    for (i, v) in ivs:
         x_[i] = v
     return tuple(x_)
 
@@ -11,11 +11,14 @@ def subval(x, i, v):
     x_ = list(x)
     x_[i] = v
     return tuple(x_)
-
 if sys.version_info >= (3,):
-    def func(f): return f
+
+    def func(f):
+        return f
 else:
-    def func(f): return f.__func__
+
+    def func(f):
+        return f.__func__
 
 def toposort(end_node, parents=operator.attrgetter('parents')):
     child_counts = {}
@@ -27,7 +30,6 @@ def toposort(end_node, parents=operator.attrgetter('parents')):
         else:
             child_counts[node] = 1
             stack.extend(parents(node))
-
     childless_nodes = [end_node]
     while childless_nodes:
         node = childless_nodes.pop()
@@ -37,16 +39,10 @@ def toposort(end_node, parents=operator.attrgetter('parents')):
                 childless_nodes.append(parent)
             else:
                 child_counts[parent] -= 1
-
-# -------------------- deprecation warnings -----------------------
-
 import warnings
-deprecation_msg = """
-The quick_grad_check function is deprecated. See the update guide:
-https://github.com/HIPS/autograd/blob/master/docs/updateguide.md"""
+deprecation_msg = '\nThe quick_grad_check function is deprecated. See the update guide:\nhttps://github.com/HIPS/autograd/blob/master/docs/updateguide.md'
 
-def quick_grad_check(fun, arg0, extra_args=(), kwargs={}, verbose=True,
-                     eps=1e-4, rtol=1e-4, atol=1e-6, rs=None):
+def quick_grad_check(fun, arg0, extra_args=(), kwargs={}, verbose=True, eps=0.0001, rtol=0.0001, atol=1e-06, rs=None):
     warnings.warn(deprecation_msg)
     from autograd.test_util import check_grads
     fun_ = lambda arg0: fun(arg0, *extra_args, **kwargs)
